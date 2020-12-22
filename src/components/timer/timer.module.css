@@ -1,0 +1,15 @@
+.timeZone {
+    color: red;
+}
+
+.handleBtn {
+    outline: none;
+    border: none;
+    border-radius: 6px;
+    /* height: 30px; */
+    /* width: 100px; */
+    background-color: rgb(108, 230, 247);
+    white-space: nowrap;
+    padding: 15px;
+    margin: 10px;
+}
