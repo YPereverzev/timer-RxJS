@@ -1,3 +1,9 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 .timeZone {
     color: red;
 }
@@ -6,10 +12,58 @@
     outline: none;
     border: none;
     border-radius: 6px;
-    /* height: 30px; */
-    /* width: 100px; */
     background-color: rgb(108, 230, 247);
     white-space: nowrap;
     padding: 15px;
     margin: 10px;
+}
+
+.clock_wrapper:before{
+    content: '';
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    z-index: 999;
+}
+
+.clock_wrapper {
+    width: 350px;
+    height: 350px;
+    background-color: #555;
+    background-image: url('./images/clock.png');
+    background-size: cover;
+    box-shadow: 1px 15px 15px 1px yellow,
+                inset 1px 15px 15px 1px red,
+                1px -15px 15px 1px blue,
+                inset 1px -15px 15px 1px teal;
+    margin: 50px;
+    border-radius: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.seconds_wrapper{
+    position: absolute;
+    background-color: blue;
+}
+
+.secondsArrow{
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    border-radius: 50%;
+}
+
+.secondsArrow:before{
+    content: '';
+    position: absolute;
+    width: 3px;
+    height: 140px;
+    background-color: #fff;
+    z-index: 12;
+    top: -20px;
+    border-radius: 6px 6px 0 0;
 }
