@@ -9,14 +9,14 @@ let startTimer = {count: 0};
 const Timer = () => {
     useEffect(() => {
         console.log('RERENDER');
-        render(startTimer);
+        renderTimer(startTimer);
     }, []);//eslint-disable-line
     
     const [timer, setTimer] = useState(3);
     const [count, setCount] = useState(0);
     const [isStarted, setIsStarted] = useState(false);
 
-    const render = (countObj) => {
+    const renderTimer = (countObj) => {
         if (!countObj) {
             console.log('!sec');
             return;
@@ -48,7 +48,7 @@ const Timer = () => {
                 className={styles.handleBtn}
                 id="«Start»"
                 onClick={() => {
-                    startHandler({ setCount, timer, setTimer, render, isStarted, setIsStarted })
+                    startHandler({ setCount, timer, setTimer, renderTimer, isStarted, setIsStarted })
                 }}
             >
                 «Start» &#8260; «Stop»
@@ -65,20 +65,12 @@ const Timer = () => {
                 className={styles.handleBtn}
                 id="«Reset»"
                 onClick={() => {
-                    render ({count: 0});
+                    renderTimer ({count: 0});
                 }}
             >
                 «Reset»
             </button>
 
-            <button 
-                className={styles.handleBtn}
-                id="«Test»"
-                onClick={() => setCount(count + 2)}
-            >
-                «Test» ${count}
-            </button>
-            
             <div className={styles.clock_wrapper}>
                 <div className={styles.seconds_wrapper}>
                     <div className={`${styles.secondsArrow} secondsArrow`}>
@@ -91,13 +83,14 @@ const Timer = () => {
 
 export default Timer;
 
-const startHandler = ({ render, isStarted, setIsStarted }) => {
+const startHandler = ({ renderTimer, isStarted, setIsStarted }) => {
     if (isStarted) {
         console.log('Timer already started');
         return ;
     } else {
         console.log('Starting the timer');
         setIsStarted(true);
+        startTimer = {count: 0};
     }
 
     const startBtn = document.getElementById('«Start»');
@@ -109,11 +102,13 @@ const startHandler = ({ render, isStarted, setIsStarted }) => {
     const waitBtn = document.getElementById('«Wait»');
     const waitBtn$ = fromEvent(waitBtn, 'click');
     
+    let pause = false;
     const timerFlow = merge(
-        interval(100).pipe(
-            mapTo((countPrev) => ({
-                count: countPrev.count + 1
-            }))
+        interval(500).pipe(
+            mapTo((countPrev) => {
+                if (pause) return countPrev;
+                return  {count: countPrev.count + 1}
+            })
         ),
         resetBtn$.pipe(
                 mapTo(
@@ -124,11 +119,11 @@ const startHandler = ({ render, isStarted, setIsStarted }) => {
             ),
         waitBtn$.pipe(
             mapTo((acc) => {
-                if (isDoubleclick({timerFlow})) {
-                    timerFlow.unsubscribe();
-                    setIsStarted(false);
-                };
-                return acc;
+                if (isDoubleclick()) {
+                    pause = !pause
+                } else {
+                    return acc;
+                }
             })
         )
     )
@@ -136,10 +131,6 @@ const startHandler = ({ render, isStarted, setIsStarted }) => {
         startWith(startTimer),
         takeUntil(startBtn$),
         scan((countPrev, nextValCalc) => {
-            console.log('TEST', countPrev);
-            setTimeout(() => {
-                
-            }, 0);
             return nextValCalc(countPrev)
         })
     )
@@ -147,8 +138,7 @@ const startHandler = ({ render, isStarted, setIsStarted }) => {
         (countObj, ITEM) => {
             timerValue++;
             console.log('countObj: ', countObj);
-            render(countObj)
-
+            renderTimer(countObj)
         },
         (err) => console.log('ошибка', err),
         (countObj) => {
@@ -161,7 +151,7 @@ const startHandler = ({ render, isStarted, setIsStarted }) => {
 }
 
 let doubleclick = 0;
-const isDoubleclick = ({timerFlow}) => {
+const isDoubleclick = () => {
     doubleclick++;
     let timer = setTimeout(() => {
         doubleclick = 0;
@@ -169,7 +159,6 @@ const isDoubleclick = ({timerFlow}) => {
 
     if (doubleclick > 1) {
         console.log('сработал даблклик');
-      
         clearTimeout(timer);
         doubleclick = 0;
         return true;

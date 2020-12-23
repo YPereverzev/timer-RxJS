@@ -34,10 +34,10 @@
     background-color: #555;
     background-image: url('./images/clock.png');
     background-size: cover;
-    box-shadow: 1px 15px 15px 1px yellow,
-                inset 1px 15px 15px 1px red,
-                1px -15px 15px 1px blue,
-                inset 1px -15px 15px 1px teal;
+    box-shadow: 1px 15px 15px 1px #222,
+                inset 0px 15px 15px 1px #EEE,
+                1px -15px 15px 1px #CCC,
+                inset 1px -15px 15px 1px #EEE;
     margin: 50px;
     border-radius: 200px;
     display: flex;
